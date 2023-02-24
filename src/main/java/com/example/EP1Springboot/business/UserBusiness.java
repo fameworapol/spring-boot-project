@@ -8,6 +8,7 @@ import com.example.EP1Springboot.mapper.UserMapper;
 import com.example.EP1Springboot.model.MLogInRequest;
 import com.example.EP1Springboot.model.MRegisterResponse;
 import com.example.EP1Springboot.model.ModelRegisterRequest;
+import com.example.EP1Springboot.service.TokenService;
 import com.example.EP1Springboot.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,10 +21,14 @@ import java.util.Optional;
 public class UserBusiness {
     private final UserService userservice;
 
+    //Inject JWT
+    private final TokenService tokenService;
+
     //เรียกใช้ mapper
     private final UserMapper userMapper;
-    public UserBusiness(UserService userservice, UserMapper userMapper) {
+    public UserBusiness(UserService userservice, TokenService tokenService, UserMapper userMapper) {
         this.userservice = userservice;
+        this.tokenService = tokenService;
         this.userMapper = userMapper;
     }
     //method ลงทะเบียน
@@ -94,7 +99,7 @@ public class UserBusiness {
             throw UserException.loginFailPasswodIncorrect();
         }
         //TODO:ถ้า login ผ่านแล้วให้ generated JWT ให้ user ไปถือไว้เพื่อยืนยันตัวนตนว่า login แล้วนะ
-        String token = "JWT";
-        return token;
+        String token = tokenService.tokenize(user); //สร้าง Token
+        return token; //return Token ไปยัง API
     }
 }
