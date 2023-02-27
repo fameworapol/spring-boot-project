@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-@Service //กำหนดให้เป็น Controller
+@Service
 public class ProductBusiness {
     public String getProductById(String id) throws BaseException {
         //ไปดึงชื่อสินค้าจาก database ทีี่มีค่า id กับที่รับมาและ return กลับไป

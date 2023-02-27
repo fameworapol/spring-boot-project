@@ -1,6 +1,8 @@
 package com.example.EP1Springboot.service;
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.EP1Springboot.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,6 @@ public class TokenService {
 
     //method สำหรับสร้าง token
     public String tokenize(User user) {
-        //เลือก Algorithms ที่จะใช้
-        Algorithm algorithm = Algorithm.HMAC256(secret);
 
         Calendar calendar = Calendar.getInstance(); //เวลาปัจจุบัน
         calendar.add(Calendar.MINUTE,60); //เวลาปัจจุบัน +60 นาที
@@ -31,7 +31,7 @@ public class TokenService {
                 .withClaim("principal",user.getId()) //withClaim ข้อมูลที่ฝังไปกับ Token
                 .withClaim("role","USER")
                 .withExpiresAt(expireAt) //กำหนด role ให้กับ user แต่ละคน
-                .sign(algorithm)
+                .sign(algorithms())
                 ;
 
         /*{
@@ -42,5 +42,22 @@ public class TokenService {
         ข้อมูล payload ที่เก็บใน token
         */
         return token;
+    }
+    //method เช็คว่า token นั้นถูกไหม?
+    public DecodedJWT verify(String token ){
+        try {
+            JWTVerifier verifier = JWT.require(algorithms())
+                    .withIssuer(issuer)
+                    .build();
+            return verifier.verify(token); //ถ้า verify ผ่านก็จะ return true
+        }catch (Exception e){
+            return null;
+        }
+
+    }
+
+    private Algorithm algorithms(){
+        //เลือก Algorithms ที่จะใช้
+        return Algorithm.HMAC256(secret);
     }
 }

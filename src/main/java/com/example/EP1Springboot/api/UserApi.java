@@ -26,7 +26,7 @@ public class UserApi {
     }
 
     //🍎GET
-    //😭ไม่มีการกำหนด RequestMapping แสดงว่าอยู่ที่ path /test เลย
+    //😭ไม่มีการกำหนด RequestMapping แสดงว่าอยู่ที่ path /user เลย
     @GetMapping //😭กำหนดให้เป็น Http Get (response ค่ากลับไปให้ client)
     //😭กำหนดให้ return TestResponse ออกไป
     public TestResponse test() {
@@ -36,7 +36,7 @@ public class UserApi {
         response.setAge(23);
         response.setStudentid("6509035025");
         return response; //😭Return object response ออกไปเลย (จะ return เป็น json ออกไป)
-        //😭เมื่อไปที่ http://localhost:8080/test จะได้ {"name":"fame","age":23}
+        //😭เมื่อไปที่ http://localhost:8080/user จะได้ {"name":"fame","age":23}
     }
 
     //🍎POST
