@@ -27,6 +27,11 @@ public class UserService {
         return repository.findByEmail(email);
     }
 
+    //method สำหรับการค้นหา user จาก id
+    public Optional<User> findById(String id){
+        return repository.findById(id);
+    }
+
     public boolean matchPassword(String rawPassword,String encodedPassword){
         return passwordEncoder.matches(rawPassword,encodedPassword); //เช็คว่า password ที่ encode ไว้ตรงกับที่ส่งมารึเปล่า
     }

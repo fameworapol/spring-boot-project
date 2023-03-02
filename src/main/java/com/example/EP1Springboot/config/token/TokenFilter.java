@@ -47,7 +47,7 @@ public class TokenFilter extends GenericFilterBean {
             return;
         }
 
-        //ดึงค่า token ออกมาใช้งาน (จาก header authorization)
+        //ตัดค่า token ออกมาใช้งาน (จาก header authorization)
         String token = authorization.substring(7);
 
         //verify token ว่าถูกต้องไหม? ถ้าไม่ถูกจะได้ค่า null
@@ -70,5 +70,7 @@ public class TokenFilter extends GenericFilterBean {
         //นำ object กำหนด context ของ user (บริบท) >> บอกว่า user login เข้ามาแล้ว
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(authentication);
+
+        filterChain.doFilter(servletRequest,servletResponse); //Redirect ไปยังปลายทางของ user (API ที่ต้องการ)
     }
 }

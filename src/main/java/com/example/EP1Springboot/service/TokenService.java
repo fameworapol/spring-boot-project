@@ -18,7 +18,7 @@ public class TokenService {
     @Value("({app.token.issuer})")
     private String issuer;
 
-    //method สำหรับสร้าง token
+    //🍎 method สำหรับสร้าง token
     public String tokenize(User user) {
 
         Calendar calendar = Calendar.getInstance(); //เวลาปัจจุบัน

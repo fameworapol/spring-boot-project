@@ -10,11 +10,16 @@ import com.example.EP1Springboot.model.MRegisterResponse;
 import com.example.EP1Springboot.model.ModelRegisterRequest;
 import com.example.EP1Springboot.service.TokenService;
 import com.example.EP1Springboot.service.UserService;
+import com.example.EP1Springboot.util.SecurityUtil;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service //กำหนดให้เป็น Business(Controller)
@@ -101,5 +106,23 @@ public class UserBusiness {
         //TODO:ถ้า login ผ่านแล้วให้ generated JWT ให้ user ไปถือไว้เพื่อยืนยันตัวนตนว่า login แล้วนะ
         String token = tokenService.tokenize(user); //สร้าง Token
         return token; //return Token ไปยัง API
+    }
+
+    public String refreshToken() throws BaseException{
+        //ดึงค่า id(principal) จาก token ที่มีอยู่
+        Optional<String> opt = SecurityUtil.getCurrentUserId();
+        if (opt.isEmpty()){
+            throw UserException.notFound();
+        }
+        String userId = opt.get();
+        //ค้นหา user จาก id
+        Optional<User> optUser = userservice.findById(userId);
+        if (optUser.isEmpty()){ //ถ้าไม่เจอ throw UserException
+            throw UserException.notFound();
+        }
+        //ถ้าเจอ user
+        User user = optUser.get();
+        //สร้าง token ให้ user ใหม่
+        return tokenService.tokenize(user);
     }
 }
