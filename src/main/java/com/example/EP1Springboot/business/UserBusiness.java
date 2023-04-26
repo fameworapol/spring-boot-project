@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Service //กำหนดให้เป็น Business(Controller)
+@Service //กำหนดให้เป็น Service
 public class UserBusiness {
     private final UserService userservice;
 

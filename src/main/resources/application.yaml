@@ -1,5 +1,17 @@
 # 🦷 configuration for upload file
 spring:
+  #config mail
+  mail:
+    host: smtp.gmail.com #บอกว่า gmail มี protocol เป็น http
+    port: 587
+    username: famebazooka #gmail
+    password: xcflozvcukzukxul #app password
+    properties :
+      mail :
+        smtp :
+          auth : true
+          starttls :
+            enable : true
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,3 +30,5 @@ app :
   token :
     secret : m#MySecretGGWP2021
     issuer : FameServiceBackend
+  email:
+    from: famebazooka@gmail.com

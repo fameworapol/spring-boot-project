@@ -23,7 +23,7 @@ public class Social extends BaseEntity{ //สืบทอดมาจาก Base
     private String tiktok;
     //เราต้องการให้ table m_social link กับ m_user
     @OneToOne
-    @JoinColumn(name="m_user_id",nullable = false) //👉จะมีคอลัมน์ m_user ทำหน้าที่เป็น foreign key
+    @JoinColumn(name="m_user_id",nullable = false) //👉จะมีคอลัมน์ m_user_id ทำหน้าที่เป็น foreign key
     private User user;
 }
 

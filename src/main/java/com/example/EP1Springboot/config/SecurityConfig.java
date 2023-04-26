@@ -30,7 +30,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.cors().disable().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //backend จะเป็น stateless
-                .and().authorizeHttpRequests().requestMatchers("/user/register","/user/login","/user/").anonymous()//ถ้า request มาจากการลงทะเบียน และล็อกอินจะเช้าได้เลย
+                .and().authorizeHttpRequests().requestMatchers("/actuator/**","/user/register","/user/login","/user/").anonymous()//ถ้า request มาจากการลงทะเบียน และล็อกอินจะเช้าได้เลย
                 .anyRequest().authenticated() //ถ้าเป็น API อื่นๆต้อง login ก่อน
                 .and().apply(new TokenFilterConfiguerer(tokenService))
                 .and().build();//กำหนดให้เรียกใช้ Token filter

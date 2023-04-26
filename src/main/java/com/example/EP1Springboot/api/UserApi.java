@@ -67,7 +67,7 @@ public class UserApi {
     @PostMapping
     @RequestMapping("/login")
     public ResponseEntity<String> login(@RequestBody MLogInRequest request) throws UserException {
-        String response = business.login(request);
+        String response = business.login(request); //ได้ Token return กลับมา
         return ResponseEntity.ok(response);
     }
 

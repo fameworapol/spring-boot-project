@@ -30,7 +30,7 @@ public class TokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         //ในทุกๆ request ที่มาหา backend มีการแนบ token มาด้วยไหม?
-        HttpServletRequest request = (HttpServletRequest) servletRequest; //แปลง request แบบ servlet to http
+        HttpServletRequest request = (HttpServletRequest) servletRequest; //แปลง request แบบ servlet to httpservlet
 
         //เมื่อเรา login แล้วได้ token มา >> แนบ token มากับ header (ชื่อว่า authorization) ด้วย
         String authorization = request.getHeader("Authorization"); //ดึงค่าจาก header authorization

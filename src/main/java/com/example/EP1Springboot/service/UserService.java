@@ -38,7 +38,7 @@ public class UserService {
 
     //🍎method สำหรับ create User
     public User create(String email,String password,String name) throws UserException{
-        User enity = new User();
+        User entity = new User();
         //🦷validate เช็คว่าข้อมูลไม่ใช่ค่าว่าง
         if (Objects.isNull(email)){
             throw UserException.createEmailNull();
@@ -56,11 +56,11 @@ public class UserService {
         }
 
         //🦷set ค่าที่รับมาลงไปที่ตัวแปรใน baseEntity
-        enity.setEmail(email);
-        enity.setName(name);
-        enity.setPassword(passwordEncoder.encode(password)); //ตอนนำ password เก็บที่ database จะเข้ารหัสไว้่
+        entity.setEmail(email);
+        entity.setName(name);
+        entity.setPassword(passwordEncoder.encode(password)); //ตอนนำ password เก็บที่ database จะเข้ารหัสไว้่
 
-        return repository.save(enity); //Save ข้อมูลจาก entity ลง database
+        return repository.save(entity); //Save ข้อมูลจาก entity ลง database
     }
 
     /*
