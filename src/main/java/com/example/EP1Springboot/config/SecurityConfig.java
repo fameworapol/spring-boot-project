@@ -10,6 +10,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -30,9 +36,35 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.cors().disable().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //backend จะเป็น stateless
-                .and().authorizeHttpRequests().requestMatchers("/actuator/**","/user/register","/user/login","/user/").anonymous()//ถ้า request มาจากการลงทะเบียน และล็อกอินจะเช้าได้เลย
+                .and().authorizeHttpRequests().requestMatchers(
+                        "/user",
+                        "/user/register",
+                        "/user/login",
+                        "/actuator/**",
+                        "/socket/**",
+                        "/chat/**").anonymous()//ถ้า request มาจากการลงทะเบียน และล็อกอินจะเช้าได้เลย
                 .anyRequest().authenticated() //ถ้าเป็น API อื่นๆต้อง login ก่อน
                 .and().apply(new TokenFilterConfiguerer(tokenService))
                 .and().build();//กำหนดให้เรียกใช้ Token filter
     }
+    //Config policy อนุญาตให้ frontend ยิงมาหา backend ได้
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        //config.addAllowedOrigin("http://localhost:4200"); //กำหนดให้เชื่อมต่อได้จาก http://localhost:4200 (Angular)
+        config.setAllowedOriginPatterns(Collections.singletonList("http://*"));
+        config.addAllowedHeader("*"); //อนุญาตทุก header
+        //Http method ที่สามารถรับในการ request
+        config.addAllowedMethod("OPTIONS");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("DELETE");
+        source.registerCorsConfiguration("/**",config); //filter ทุก path ด้วย config นี้
+        return new CorsFilter(source);
+    }
+
+
 }

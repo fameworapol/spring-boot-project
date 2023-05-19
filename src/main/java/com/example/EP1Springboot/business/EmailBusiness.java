@@ -27,6 +27,7 @@ public class EmailBusiness {
         //prepare content (html)
         String html = null;
         try {
+            //อ่านไฟล์ html ที่มีชื่อว่า email-activate-user.html
             html = readEmailTemplate("email-activate-user.html");
         } catch (IOException e) {
             throw EmailException.templateNotFound();

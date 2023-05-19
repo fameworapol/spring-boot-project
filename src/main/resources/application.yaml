@@ -32,3 +32,4 @@ app :
     issuer : FameServiceBackend
   email:
     from: famebazooka@gmail.com
+
