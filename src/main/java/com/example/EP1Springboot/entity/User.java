@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.Date;
 import java.util.List;
 
 //🍎class สำหรับจัดการ database (entity คือ 1 table)
@@ -26,13 +27,20 @@ public class User extends BaseEntity{ //สืบทอดมาจาก BaseEn
 
     private String civilId;
 
+
     //🦷link ตาราง m_user กับ m_social
     @OneToOne(mappedBy = "user",orphanRemoval = true) //link แบบ one to one
     private Social social; //กำหนดให้มีคอลัมน์ชื่อ social
     //orphanRemoval = true ถ้า user โดนลบ ตารางที่ link กับ user ก็ต้องโดนลบไปด้วย
 
+
     //🦷link ตาราง m_user กับ m_address
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER,orphanRemoval = true) //User link หา Address แบบ one to many
     private List<Address> addresses;
+
+    private String token;
+
+    private Date tokenExpire;
+    private boolean activated;
 }
 

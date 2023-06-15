@@ -2,24 +2,26 @@ package com.example.EP1Springboot.business;
 
 import com.example.EP1Springboot.exception.BaseException;
 import com.example.EP1Springboot.exception.EmailException;
-import com.example.EP1Springboot.service.EmailService;
-import jakarta.annotation.Resource;
+import com.example.common.EmailRequest;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 
-import javax.imageio.IIOException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 @Service
+@Log4j2
 public class EmailBusiness {
     //Inject EmailService
-    private final EmailService emailService;
-    public EmailBusiness(EmailService emailService) {
-        this.emailService = emailService;
+    private final KafkaTemplate<String,EmailRequest> kafkaEmailTemplate;
+    public EmailBusiness( KafkaTemplate<String, EmailRequest> kafkaEmailTemplate) {
+        this.kafkaEmailTemplate = kafkaEmailTemplate;
     }
 
     //method สำหรับให้ activate email
@@ -35,10 +37,17 @@ public class EmailBusiness {
         String finalLink = "http://localhost:8080/activate/"+Token;
         //แทนที่ตัวแปรใน html
         html = html.replace("${P_Name}",name);
-        html = html.replace("${LINK}",finalLink); //ให้เขาไป activete ที่ http://localhost:8080/activate/token
+        html = html.replace("${LINK}",finalLink); //ให้เขาไป activate ที่ http://localhost:8080/activate/token
         //prepare subject
         String subject = "Please activate your account.";
-        emailService.send(email,subject,html);
+        EmailRequest emailRequest = new EmailRequest();
+
+        emailRequest.setTo(email);
+        emailRequest.setContent(html);
+        emailRequest.setSubject("Please activate your account.");
+
+        CompletableFuture<SendResult<String, EmailRequest>> completableFuture = kafkaEmailTemplate.send("email-activate.", emailRequest);
+
     }
 
     //method สำหรับอ่านไฟล์ html มาใช้
@@ -46,4 +55,5 @@ public class EmailBusiness {
         File file = ResourceUtils.getFile("classpath:email/"+filename); //get file
         return FileCopyUtils.copyToString(new FileReader(file)); //อ่านไฟล์ html เป็น string
     }
+
 }

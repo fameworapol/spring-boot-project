@@ -11,51 +11,55 @@ import com.example.EP1Springboot.model.ModelRegisterRequest;
 import com.example.EP1Springboot.service.TokenService;
 import com.example.EP1Springboot.service.UserService;
 import com.example.EP1Springboot.util.SecurityUtil;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.example.common.EmailRequest;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service //กำหนดให้เป็น Service
+@Log4j2
 public class UserBusiness {
     private final UserService userservice;
-
+    private final EmailBusiness emailBusiness;
     //Inject JWT
     private final TokenService tokenService;
 
     //เรียกใช้ mapper
     private final UserMapper userMapper;
-    public UserBusiness(UserService userservice, TokenService tokenService, UserMapper userMapper) {
+
+
+
+    public UserBusiness(UserService userservice, EmailBusiness emailBusiness, TokenService tokenService, UserMapper userMapper) {
         this.userservice = userservice;
+        this.emailBusiness = emailBusiness;
         this.tokenService = tokenService;
         this.userMapper = userMapper;
+
     }
     //method ลงทะเบียน
     public MRegisterResponse register(ModelRegisterRequest request) throws BaseException { //throw exception ออกไปที object ที่เรียกใช้ (throws IOException)
+        String token = SecurityUtil.generateToken();
         //🍎เรียกใช้ Service และส่ง parameter เข้าไปทำงาน
-        User user = userservice.create(request.getEmail(), request.getPassword(), request.getName()); //user จะเก็บค่าของ user ในรูป json
+        User user = userservice.create(request.getEmail(), request.getPassword(), request.getName(),token); //user จะเก็บค่าของ user ในรูป json
+
+        //ทุกครั้งที่มีการเข้าสู่ระบบจะให้เรียกใช้ kafka เพื่อส่งข้อมูลไปหา email
+        sendEmail(user);
 
         //ใช้ mapper
         return userMapper.toRegisterResponse(user);
-        /*🍎 validation
-        if (request == null) {
-            throw UserException.requestNull(); //ถ้ามีค่า request เป็น null จะกำหนดให้เป็น Exception requestNull
-        }
-        //ถ้ามีค่า email เป็น null จะกำหนดให้เป็น Exception emailNull
-        if (Objects.isNull(request.getEmail())) {
-            throw UserException.emailNull(); //throw exception emailNull() ที่สร้างขึ้นมาเองออกไป
-        }
-        //ถ้ามีค่า password เป็น null จะกำหนดให้เป็น Exception passwordNull
-        if (Objects.isNull(request.getPassword())) {
-            throw UserException.passwordlNull();
-        }
-        return "";*/
+
+    }
+
+    public void sendEmail(User user) throws BaseException {
+        String token = user.getToken();
+        emailBusiness.sendActivateUserEmail(user.getEmail(),user.getName(),token);
     }
 
     //🍎 method สำหรับจัดการ upload file

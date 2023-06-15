@@ -1,17 +1,14 @@
+#กำหนด port เป็น 8080
+server:
+  port: 8080
 # 🦷 configuration for upload file
 spring:
-  #config mail
-  mail:
-    host: smtp.gmail.com #บอกว่า gmail มี protocol เป็น http
-    port: 587
-    username: famebazooka #gmail
-    password: xcflozvcukzukxul #app password
-    properties :
-      mail :
-        smtp :
-          auth : true
-          starttls :
-            enable : true
+  #connect kafka
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: "my-awesome-app" #กลุ่มของการทำงาน (การทำงานคือจะส่งข้อมูลภายในกลุ่มนี้ เหมือนกลุ่มไลน์)
+
   jpa:
     hibernate:
       ddl-auto: update

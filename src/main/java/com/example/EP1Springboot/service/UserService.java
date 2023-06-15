@@ -3,10 +3,13 @@ package com.example.EP1Springboot.service;
 import com.example.EP1Springboot.exception.BaseException;
 import com.example.EP1Springboot.exception.UserException;
 import com.example.EP1Springboot.repository.UserRepository;
+import com.example.EP1Springboot.util.SecurityUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.EP1Springboot.entity.User;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -37,7 +40,7 @@ public class UserService {
     }
 
     //🍎method สำหรับ create User
-    public User create(String email,String password,String name) throws UserException{
+    public User create(String email,String password,String name,String token) throws UserException{
         User entity = new User();
         //🦷validate เช็คว่าข้อมูลไม่ใช่ค่าว่าง
         if (Objects.isNull(email)){
@@ -59,10 +62,16 @@ public class UserService {
         entity.setEmail(email);
         entity.setName(name);
         entity.setPassword(passwordEncoder.encode(password)); //ตอนนำ password เก็บที่ database จะเข้ารหัสไว้่
-
+        entity.setToken(token);
+        entity.setTokenExpire(nextXminute(30));
         return repository.save(entity); //Save ข้อมูลจาก entity ลง database
     }
 
+    private Date nextXminute(int minute){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE,minute);
+        return calendar.getTime();
+    }
     /*
     update ทั้งก้อนเลย
     public User update(User user){

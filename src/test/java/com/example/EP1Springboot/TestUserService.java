@@ -8,6 +8,7 @@ import com.example.EP1Springboot.exception.UserException;
 import com.example.EP1Springboot.service.AddressService;
 import com.example.EP1Springboot.service.SocialService;
 import com.example.EP1Springboot.service.UserService;
+import com.example.EP1Springboot.util.SecurityUtil;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,10 +29,12 @@ class TestUserService {
 	@Order(1) //กำหนดให้ test เป็นอันดับ 1
 	@Test
 	void testCreate() throws BaseException{
+		String token = SecurityUtil.generateToken();
 		User user = userService.create(
 				testCreateData.email,
 				testCreateData.password,
-				testCreateData.name
+				testCreateData.name,
+				token
 		);
 		//Check not Null >> ถ้า create ได้จะได้ user มาก้อนนึงและต้องไม่เป็น Null
 		Assertions.assertNotNull(user);
