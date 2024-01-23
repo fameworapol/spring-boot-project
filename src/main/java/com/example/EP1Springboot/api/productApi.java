@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
-
 @RestController
 @RequestMapping("/product")
 public class productApi {
@@ -26,5 +23,10 @@ public class productApi {
     public ResponseEntity<String> getProductById(@PathVariable("id") String id) throws BaseException { //ค่าที่ส่งมาจะเก็บลงใน id
         String response = business.getProductById(id); //ส่ง parameter ที่รับมาไปทำงานที่ method getProductById ใน TestApiBusiness
         return ResponseEntity.ok(response); //return ค่าใน response พร้อม http status
+    }
+
+    @GetMapping("/testApi")
+    public String testApi() {
+        return "fame";
     }
 }

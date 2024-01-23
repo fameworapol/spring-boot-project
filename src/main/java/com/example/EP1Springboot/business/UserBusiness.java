@@ -11,7 +11,7 @@ import com.example.EP1Springboot.model.ModelRegisterRequest;
 import com.example.EP1Springboot.service.TokenService;
 import com.example.EP1Springboot.service.UserService;
 import com.example.EP1Springboot.util.SecurityUtil;
-import com.example.common.EmailRequest;
+//import com.example.common.EmailRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -59,7 +59,7 @@ public class UserBusiness {
 
     public void sendEmail(User user) throws BaseException {
         String token = user.getToken();
-        emailBusiness.sendActivateUserEmail(user.getEmail(),user.getName(),token);
+//        emailBusiness.sendActivateUserEmail(user.getEmail(),user.getName(),token);
     }
 
     //🍎 method สำหรับจัดการ upload file

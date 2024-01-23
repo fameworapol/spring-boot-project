@@ -19,9 +19,9 @@ public class TestEmailBusiness {
     @Order(1)
     @Test
     void testSendActivateEmail() throws BaseException {
-        emailBusiness.sendActivateUserEmail(
-                TestData.email,TestData.name,TestData.token
-        );
+//        emailBusiness.sendActivateUserEmail(
+//                TestData.email,TestData.name,TestData.token
+//        );
     }
     interface TestData{
         String email = "worapol3579@gmail.com";

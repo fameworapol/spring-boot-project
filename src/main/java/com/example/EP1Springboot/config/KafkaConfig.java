@@ -1,6 +1,6 @@
 package com.example.EP1Springboot.config;
 
-import com.example.common.EmailRequest;
+//import com.example.common.EmailRequest;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,9 +29,9 @@ public class KafkaConfig {
         return map;
     }
 
-    @Bean
-    public KafkaTemplate<String, EmailRequest> kafkaEmailTemplate(){
-        DefaultKafkaProducerFactory<String, EmailRequest> factory = new DefaultKafkaProducerFactory<>(producerConfigs());
-        return new KafkaTemplate<>(factory);
-    }
+//    @Bean
+//    public KafkaTemplate<String, EmailRequest> kafkaEmailTemplate(){
+//        DefaultKafkaProducerFactory<String, EmailRequest> factory = new DefaultKafkaProducerFactory<>(producerConfigs());
+//        return new KafkaTemplate<>(factory);
+//    }
 }
